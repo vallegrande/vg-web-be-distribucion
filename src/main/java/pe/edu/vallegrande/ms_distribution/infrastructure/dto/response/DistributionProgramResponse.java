@@ -12,7 +12,7 @@ public class DistributionProgramResponse {
     private String id;
     private String organizationId;
     private String zoneId;          
-    private List<String> streetId; 
+    private String streetId; 
 
     private String programCode;
     private String scheduleId;

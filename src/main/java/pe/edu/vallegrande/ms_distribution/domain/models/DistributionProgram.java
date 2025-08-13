@@ -22,7 +22,7 @@ public class DistributionProgram {
     private String scheduleId;
     private String routeId; 
     private String zoneId;            
-    private List<String> streetId;    
+    private String streetId;    
     private LocalDate programDate;
     private String plannedStartTime;
     private String plannedEndTime;

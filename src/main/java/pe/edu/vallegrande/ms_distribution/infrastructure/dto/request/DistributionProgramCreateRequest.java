@@ -14,7 +14,7 @@ public class DistributionProgramCreateRequest {
     private String scheduleId;
     private String routeId; 
     private String zoneId;              
-    private List<String> streetId;     
+    private String streetId;     
     private String programDate; // formato: yyyy-MM-dd
     private String plannedStartTime; // HH:mm
     private String plannedEndTime;   // HH:mm
