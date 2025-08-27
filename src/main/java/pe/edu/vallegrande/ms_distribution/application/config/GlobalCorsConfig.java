@@ -15,9 +15,12 @@ public class GlobalCorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Permitir cualquier origen
-        config.addAllowedOrigin("*");
-        // O también: config.setAllowedOriginPatterns(List.of("*"));
+        // Permitir solo los orígenes especificados
+        config.setAllowedOrigins(List.of(
+                "https://lab.vallegrande.edu.pe",
+                "http://localhost:4200",
+                "http://127.0.0.1:4200"
+        ));
 
         // Permitir todos los métodos
         config.addAllowedMethod("*");
@@ -25,8 +28,8 @@ public class GlobalCorsConfig {
         // Permitir todos los headers
         config.addAllowedHeader("*");
 
-        // No usar credenciales para que funcione con "*"
-        config.setAllowCredentials(false);
+        // Habilitar credenciales ya que los orígenes están definidos
+        config.setAllowCredentials(true);
 
         config.setMaxAge(3600L); // Cache del preflight por 1h
 

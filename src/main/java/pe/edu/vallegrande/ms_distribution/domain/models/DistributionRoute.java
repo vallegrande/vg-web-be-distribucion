@@ -22,7 +22,7 @@ public class DistributionRoute {
     private String routeCode;
     private String routeName;
 
-    private List<ZoneOrder> zones;
+    private String zones;
 
     private int totalEstimatedDuration; // en horas
 

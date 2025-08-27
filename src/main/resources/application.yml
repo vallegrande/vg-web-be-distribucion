@@ -9,16 +9,25 @@ spring:
     resources:
       cache:
         period: 0
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:}
 
 server:
      port: 8086
      forward-headers-strategy: framework
 cors:
-     allowed-origins: "*"
+     allowed-origins: "https://lab.vallegrande.edu.pe,http://localhost:4200,http://127.0.0.1:4200"
      allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS,HEAD
      allowed-headers: "*"
      allow-credentials: true
      max-age: 3600
+
+# Seguridad: desactivada por defecto para evitar fallos si no se configura Keycloak
+security:
+  enabled: ${SECURITY_ENABLED:false}
 
 springdoc:
   swagger-ui:

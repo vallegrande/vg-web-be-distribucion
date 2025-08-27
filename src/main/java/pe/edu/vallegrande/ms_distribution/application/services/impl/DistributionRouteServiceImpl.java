@@ -53,20 +53,21 @@ public Mono<DistributionRouteResponse> save(DistributionRouteCreateRequest reque
     return generateNextRouteCode()
         .flatMap(generatedCode -> {
 
-            // 👇 Convertimos ZoneEntry a ZoneOrder
-            List<DistributionRoute.ZoneOrder> zoneOrders = request.getZones().stream()
-                    .map(entry -> DistributionRoute.ZoneOrder.builder()
-                            .zoneId(entry.getZoneId())
-                            .order(entry.getOrder())
-                            .estimatedDuration(entry.getEstimatedDuration())
-                            .build())
-                    .collect(Collectors.toList());
-
             DistributionRoute route = DistributionRoute.builder()
                     .organizationId(request.getOrganizationId())
                     .routeCode(generatedCode) // ← Usamos el código generado
                     .routeName(request.getRouteName())
-                    .zones(zoneOrders)
+                    // Guardamos el JSON crudo de zonas como String para flexibilidad
+                    .zones(com.fasterxml.jackson.databind.json.JsonMapper.builder().build()
+                            .createArrayNode()
+                            .addAll(request.getZones().stream().map(z -> {
+                                com.fasterxml.jackson.databind.node.ObjectNode node = com.fasterxml.jackson.databind.json.JsonMapper.builder().build().createObjectNode();
+                                node.put("zone_id", z.getZoneId());
+                                node.put("order", z.getOrder());
+                                node.put("estimated_duration", z.getEstimatedDuration());
+                                return node;
+                            }).collect(java.util.stream.Collectors.toList()))
+                            .toPrettyString())
                     .totalEstimatedDuration(request.getTotalEstimatedDuration())
                     .responsibleUserId(request.getResponsibleUserId())
                     .status(Constants.ACTIVE.name())
@@ -79,15 +80,7 @@ public Mono<DistributionRouteResponse> save(DistributionRouteCreateRequest reque
                             .organizationId(saved.getOrganizationId())
                             .routeCode(saved.getRouteCode())
                             .routeName(saved.getRouteName())
-                            .zones(
-                                    saved.getZones().stream()
-                                            .map(z -> DistributionRouteResponse.ZoneDetail.builder()
-                                                    .zoneId(z.getZoneId())
-                                                    .order(z.getOrder())
-                                                    .estimatedDuration(z.getEstimatedDuration())
-                                                    .build())
-                                            .collect(Collectors.toList())
-                            )
+                            // No transformamos el String a lista; si fuera necesario, se puede parsear
                             .totalEstimatedDuration(saved.getTotalEstimatedDuration())
                             .responsibleUserId(saved.getResponsibleUserId())
                             .status(saved.getStatus())
